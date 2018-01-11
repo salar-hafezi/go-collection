@@ -21,11 +21,22 @@ func main() {
 	port := 8080
 
 	http.HandleFunc("/hello", helloHandler)
-
+	http.HandleFunc("/", jsonTest)
 	log.Printf("Server starting on port %v\n", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", port), nil))
 }
 
+func jsonTest(w http.ResponseWriter, r *http.Request) {
+	helloMessage := helloResponse{
+		Message: "Hello",
+		Author:  "Salar Hafezi",
+		Date:    "",
+		ID:      1371,
+	}
+	w.Header().Set("Content-Type", "application/json")
+	encoder := json.NewEncoder(w)
+	encoder.Encode(helloMessage)
+}
 func helloHandler(w http.ResponseWriter, r *http.Request) {
 	logMessage := fmt.Sprintf("the req of type %s went to %s path", r.Method, r.URL)
 	log.Printf("Logger says:\n%s", logMessage)
